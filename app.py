@@ -1,10 +1,12 @@
 # app.py
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from engine import get_soup, get_words, get_links
+
 import re
 
 app = Flask(__name__)
-
+CORS(app)
 words_dict = {}
 
 
@@ -34,6 +36,19 @@ def construct_words(url: str):
         child_words = get_words(child_soup)
         # then add words on the child page to the dictionary
         add_words_to_dict(child_words)
+
+
+@app.post("/page")
+def get_page():
+
+    # breakpoint()
+
+    # try:
+    #     base_url = request.args['page_url']
+    # except:
+    #     return {"error": "page_url is required"}, 415
+
+    return "hi", 200
 
 
 @app.get("/search")
