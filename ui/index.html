@@ -23,11 +23,28 @@
             <h1>Welcome to this very very simple search egine, kinda!</h1>
             <hr />
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Enter page url here...">
+                <input id="pageUrl" type="text" class="form-control" placeholder="Enter page url here...">
                 <span class="input-group-btn">
                   <button id="getPage" class="btn btn-success" type="button">Get Page</button>
                 </span>
+            </div>
+            <div class="d-block">
+              <p id="serverRespose"> Enter Page URL to load and index words </p>
+            </div>
+            <div class="row search-block">
+              <div class="col-sm-6">
+                <div class="input-group cl-6">
+                  <input id="word" type="text" class="form-control" placeholder="Enter word to search...">
+                  <span class="input-group-btn">
+                    <button id="searchWord" class="btn btn-default" type="button">Search</button>
+                  </span>
               </div>
+              </div>
+            </div>
+            <div class="d-block">
+              <p id="wordResult"></p>
+            </div>
+            
         </div>
 
 
@@ -37,21 +54,43 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>   
         <script>
-            $( "#getPage" ).click(function() {
-                $.ajax({
-                    type: "POST",
-                    url: "http://127.0.0.1:5000/page",
-                    data: JSON.stringify( {"page_url": "somePageUrl"}),
-                    dataType: 'json',
-                    success: function( data, textStatus, jQxhr ){
-                        alert( data );
-                    },
-                    error: function( jqXhr, textStatus, errorThrown ){
-                        console.log( errorThrown );
-                    }
-                })
+            $.ajaxSetup({ cache: false });
+            $.ajaxSetup({
+              contentType: "application/json; charset=utf-8",
+              cache: false
             });
-            // e.preventDefault();
+            $('.search-block').addClass("hidden")
+            $( "#getPage" ).click(function(e) {
+                
+                var pageUrl = $("#pageUrl").val()
+                console.log("page url entered "+pageUrl)
+
+                $.post("http://127.0.0.1:5000/page",JSON.stringify({ page_url: pageUrl }))
+                  .done(function(result, status, xhr){
+                    $("#serverRespose").html(result + "<br>You may search for a word below")
+                    $('.search-block').removeClass("hidden")
+                  })
+                  .fail(function(xhr, status, error){
+                    $("#serverRespose").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+                  })
+                e.preventDefault();
+            });
+            
+            $( "#searchWord" ).click(function(e) {
+                
+                var word = $("#word").val()
+                console.log("seraching for "+word)
+
+                $.post("http://127.0.0.1:5000/search",JSON.stringify({ word: word }))
+                  .done(function(result, status, xhr){
+                    $("#wordResult").html(JSON.stringify(result))
+                    // $('.search-block').removeClass("hidden")
+                  })
+                  .fail(function(xhr, status, error){
+                    $("#wordResult").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+                  })
+                e.preventDefault();
+            });
             
         </script>
   </body>

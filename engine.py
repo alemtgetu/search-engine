@@ -1,4 +1,5 @@
 from inspect import BoundArguments
+from xmlrpc.client import Boolean
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from urllib.parse import urlsplit, urlparse
@@ -9,6 +10,25 @@ import re
 # # print(split_url)
 # # will be used as base url for relative paths in <a href>
 # base_url = split_url.scheme+'://'+split_url.netloc
+
+def is_valid_url(url) -> bool:
+    """Validate if string is valid url
+
+    Parameters
+    ----------
+    url: str
+        The url of the web page
+
+    Returns
+    -------
+    bool
+        True if it is valid url
+    """
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except:
+        return False
 
 
 def get_soup(url: str) -> BeautifulSoup:

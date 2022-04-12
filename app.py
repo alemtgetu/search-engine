@@ -1,7 +1,7 @@
 # app.py
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from engine import get_soup, get_words, get_links
+from engine import get_soup, get_words, get_links, is_valid_url
 
 import re
 
@@ -37,34 +37,36 @@ def construct_words(url: str):
         # then add words on the child page to the dictionary
         add_words_to_dict(child_words)
 
+# @app.get("/page")
+# def get_page_():
+#     return "welcome", 200
 
 @app.post("/page")
 def get_page():
 
     # breakpoint()
+    print(request.is_json)
+    print(request.headers)
+    try:
+        req_data = request.get_json()
+        if is_valid_url(req_data['page_url']):
+            construct_words(req_data['page_url']) 
+            print(words_dict)
+    except:
+        return {"error": "page_url is not valid"}, 415
 
-    # try:
-    #     base_url = request.args['page_url']
-    # except:
-    #     return {"error": "page_url is required"}, 415
-
-    return "hi", 200
+    return "words extracted from web "+req_data['page_url'], 200
 
 
-@app.get("/search")
+@app.post("/search")
 def search_word():
     # breakpoint()
-    # print(request)
-    # words_dict = {}
-    try:
-        base_url = request.args['url']
-        search_word = request.args['word']
+    
+    search_word = ""
+    if request.is_json:
+        search_word = request.get_json()['word']
+    
 
-    except:
-        return {"error": "url and word aren't passed correctly"}, 415
-
-    construct_words(base_url)
-    print(words_dict)
     try:
         word_count = words_dict[search_word]
     except KeyError:
