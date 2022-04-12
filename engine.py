@@ -10,7 +10,7 @@ import re
 # # print(split_url)
 # # will be used as base url for relative paths in <a href>
 # base_url = split_url.scheme+'://'+split_url.netloc
-
+syncategorematic_words = ["a","an", "is","of", "and", "the", "then", "to", "for", "but", "it", "all"]
 def is_valid_url(url) -> bool:
     """Validate if string is valid url
 
@@ -61,8 +61,9 @@ def get_words(soup_obj: BeautifulSoup) -> list:
     -------
     list
         a list of words from the web page
-    """
-    return(soup_obj.get_text().replace('\n', ' ').split())
+    """ 
+    
+    return([w  for w in soup_obj.get_text().replace('\n', ' ').split() if w.lower() not in syncategorematic_words])
 
 
 def get_links(soup_object: BeautifulSoup, url: str) -> list:
