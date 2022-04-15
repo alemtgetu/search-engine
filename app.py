@@ -37,9 +37,11 @@ def construct_words(url: str):
         # then add words on the child page to the dictionary
         add_words_to_dict(child_words)
 
-# @app.get("/page")
-# def get_page_():
-#     return "welcome", 200
+
+@app.get("/check")
+def get_page_():
+    return "welcome!", 200
+
 
 @app.post("/page")
 def get_page():
@@ -50,7 +52,7 @@ def get_page():
     try:
         req_data = request.get_json()
         if is_valid_url(req_data['page_url']):
-            construct_words(req_data['page_url']) 
+            construct_words(req_data['page_url'])
             print(words_dict)
     except:
         return {"error": "page_url is not valid"}, 415
@@ -61,11 +63,10 @@ def get_page():
 @app.post("/search")
 def search_word():
     # breakpoint()
-    
+
     search_word = ""
     if request.is_json:
         search_word = request.get_json()['word']
-    
 
     try:
         word_count = words_dict[search_word]

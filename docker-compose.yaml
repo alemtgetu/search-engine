@@ -1,0 +1,27 @@
+services:
+  api:
+    image: flask-app
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "5001:5001"
+    # networks:
+    #   - back-end
+    env_file:
+      - .env
+    # entrypoint: "flask run"
+
+  ui:
+    image: search-ui
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    ports:
+      - "8080:80"
+    # networks:
+    #   - front-end
+
+# networks:
+#   back-end: {}
+#   front-end: {}
