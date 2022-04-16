@@ -49,6 +49,7 @@ def get_page():
     # breakpoint()
     print(request.is_json)
     print(request.headers)
+    words_dict.clear()
     try:
         req_data = request.get_json()
         if is_valid_url(req_data['page_url']):
@@ -65,9 +66,10 @@ def search_word():
     # breakpoint()
 
     search_word = ""
+    print("****** SEARCH WORD ********")
     if request.is_json:
         search_word = request.get_json()['word']
-
+    print("searching for the word", search_word)
     try:
         word_count = words_dict[search_word]
     except KeyError:

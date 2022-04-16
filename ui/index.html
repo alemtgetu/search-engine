@@ -59,13 +59,15 @@
               contentType: "application/json; charset=utf-8",
               cache: false
             });
+            var api_url = "http://"+window.location.hostname+":5001"
+            console.log(api_url)
             $('.search-block').addClass("hidden")
             $( "#getPage" ).click(function(e) {
                 
                 var pageUrl = $("#pageUrl").val()
                 console.log("page url entered "+pageUrl)
 
-                $.post("http://127.0.0.1:5000/page",JSON.stringify({ page_url: pageUrl }))
+                $.post(api_url+"/page",JSON.stringify({ page_url: pageUrl }))
                   .done(function(result, status, xhr){
                     $("#serverRespose").html(result + "<br>You may search for a word below")
                     $('.search-block').removeClass("hidden")
@@ -81,7 +83,7 @@
                 var word = $("#word").val()
                 console.log("seraching for "+word)
 
-                $.post("http://127.0.0.1:5000/search",JSON.stringify({ word: word }))
+                $.post(api_url+"/search",JSON.stringify({ word: word }))
                   .done(function(result, status, xhr){
                     $("#wordResult").html(JSON.stringify(result))
                     // $('.search-block').removeClass("hidden")
